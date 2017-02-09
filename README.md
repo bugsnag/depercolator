@@ -29,7 +29,7 @@ depercolate <file> [options]
 
 ## Options
 - `-o, --output [filepath]`: Change path of resulting file (defaults to same
-  path as original with different extension)
+  path as original with a different extension)
 - `-e, --eslint-fix`: Perform eslint --fix on resulting file (requires that eslint be
   present)
 - `--prefer-const`: Use `const` when converting from coffeescript
