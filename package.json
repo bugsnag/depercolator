@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "description": "Converts coffeescript to idiomatic javascript (supports JSX)",
   "main": "index.js",
-  "repository": {},
+  "homepage": "https://github.com/bugsnag/depercolator",
+  "repository": {
+    "type" : "git",
+    "url" : "git://github.com/bugsnag/depercolator.git"
+  },
   "license": "MIT",
   "bin": {
     "depercolate": "./index.js"
