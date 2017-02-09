@@ -54,3 +54,6 @@ typings/
 
 # dotenv environment variables file
 .env
+
+# test file output
+test/testfile.js
