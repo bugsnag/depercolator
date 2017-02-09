@@ -4,9 +4,10 @@
   "description": "Converts coffeescript to idiomatic javascript (supports JSX)",
   "main": "index.js",
   "homepage": "https://github.com/bugsnag/depercolator",
+  "engines" : { "node" : ">=4.3.2" }
   "repository": {
-    "type" : "git",
-    "url" : "git://github.com/bugsnag/depercolator.git"
+    "type": "git",
+    "url": "git://github.com/bugsnag/depercolator.git"
   },
   "license": "MIT",
   "bin": {
@@ -19,8 +20,13 @@
     "decaffeinate": "^2.47.0",
     "jscodeshift": "^0.3.30",
     "prettier": "^0.16.0",
-    "resolve-bin": "^0.4.0",
     "react-codemod": "reactjs/react-codemod#a21a48727",
+    "resolve-bin": "^0.4.0",
     "shelljs": "^0.7.6"
+  },
+  "devDependencies": {
+    "eslint": "^3.15.0",
+    "eslint-config-airbnb-base": "^11.1.0",
+    "eslint-plugin-import": "^2.2.0"
   }
 }
