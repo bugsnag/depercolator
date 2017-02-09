@@ -1,0 +1,20 @@
+{
+  "name": "percalator",
+  "version": "1.0.0",
+  "description": "Converts coffeescript to idiomatic javascript (supports JSX)",
+  "main": "index.js",
+  "repository": {},
+  "license": "MIT",
+  "bin": {
+    "percolate": "./index.js"
+  },
+  "dependencies": {
+    "cjsx-codemod": "^0.0.0",
+    "coffee-react-transform": "^5.0.0",
+    "commander": "^2.9.0",
+    "decaffeinate": "^2.47.0",
+    "prettier": "^0.16.0",
+    "resolve-bin": "^0.4.0",
+    "shelljs": "^0.7.6"
+  }
+}
