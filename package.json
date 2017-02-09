@@ -1,6 +1,6 @@
 {
   "name": "percolator",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Converts coffeescript to idiomatic javascript (supports JSX)",
   "main": "index.js",
   "repository": {},
