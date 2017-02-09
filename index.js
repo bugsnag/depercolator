@@ -11,7 +11,6 @@ const jscodeshiftPath = resolveBin.sync('jscodeshift');
 const cjsxTransformPath = resolveBin.sync('coffee-react-transform', { executable: 'cjsx-transform' });
 const rceToJSXPath = path.resolve(__dirname, './node_modules/react-codemod/transforms/create-element-to-jsx.js');
 
-shell.config.silent = true;
 shell.config.fatal = true;
 
 function decaffeinateCommand() {
