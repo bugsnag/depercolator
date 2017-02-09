@@ -1,4 +1,4 @@
-# Percolate
+# Depercolator
 This tool is a swiss army knife for converting coffeescript files to
 javascript. It relies on several other tools to ease the conversion process and create idiomatic javascript and JSX.
 
@@ -12,19 +12,19 @@ javascript. It relies on several other tools to ease the conversion process and 
 ## Instalation
 
 ```
-npm i -g percolate
+npm i -g depercolator
 ```
 
 or
 
 ```
-yarn add global percolate
+yarn add global depercolator
 ```
 
 ## Usage
 
 ```
-percolate <file> [options]
+depercolate <file> [options]
 ```
 
 ## Options
