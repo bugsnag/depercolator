@@ -56,4 +56,4 @@ typings/
 .env
 
 # test file output
-test/testfile.js
+test/testfile.jsx
