@@ -32,4 +32,31 @@ depercolate <file> [options]
   path as original with a different extension)
 - `-e, --eslint-fix`: Perform eslint --fix on resulting file (requires that eslint be
   present)
+
+## Decaffeinate options
+
+Most options from [decaffeinate](https://github.com/decaffeinate/decaffeinate#options) can be passed through to the underlying
+command
+
 - `--prefer-const`: Use `const` when converting from coffeescript
+- `--keep-commonjs`: Do not convert require and module.exports to import and export
+- `--prefer-const`: Use "const" when possible in output code
+- `--loose-default-params`: Convert CS default params to JS default params.
+- `--loose-for-expressions`: Do not wrap expression loop targets in Array.from
+- `--loose-for-of`: Do not wrap JS for...of loop targets in Array.from
+- `--loose-includes`: Do not wrap in Array.from when converting in to includes
+- `--allow-invalid-constructors`: Don't error when constructors use this before super or omit the super call in a subclass.
+- `--enable-babel-constructor-workaround`: Use a hacky babel-specific workaround to allow this before super in constructors.
+
+## Prettier options
+
+Most options from [prettier](https://github.com/jlongster/prettier#api) can be passed through to
+the underlying command
+
+
+- `--print-width <int>`: Specify the length of line that the formatter will wrap on. Defaults to 80.
+- `--tab-width <int>`: Specify the number of spaces per indentation-level. Defaults to 2.
+- `--single-quote`: Use single quotes instead of double.
+- `--trailing-comma`: Print trailing commas wherever possible.
+- `--bracket-spacing`: Put spaces between brackets. Defaults to true.
+- `--parser <flow|babylon>`: Specify which parse to use. Defaults to babylon.
