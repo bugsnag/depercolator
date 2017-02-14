@@ -30,8 +30,8 @@ depercolate <file> [options]
 ## Options
 - `-o, --output [filepath]`: Change path of resulting file (defaults to same
   path as original with a different extension)
-- `-e, --eslint-fix`: Perform eslint --fix on resulting file (requires that eslint be
-  present)
+- `-e, --eslint-fix`: Perform eslint --fix on resulting file (requires that eslint be present)
+- `--skip-prettier`: Do not reformat the file with prettier (default is false)
 
 ## Decaffeinate options
 

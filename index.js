@@ -94,7 +94,9 @@ function processFile(file) {
   shell.exec(jsCodeShiftCommand(output));
 
   // prettier
-  shell.exec(prettierCommand(output));
+  if (!program.skipPrettier) {
+    shell.exec(prettierCommand(output));
+  }
 
   if (program.eslintFix) {
     if (!shell.which('eslint')) {
@@ -110,7 +112,8 @@ function processFile(file) {
 program
   .arguments('<file>')
   .option('-o, --output [filepath]', 'Output file path')
-  .option('-e, --eslint-fix', 'Perform eslint --fix on resulting file');
+  .option('-e, --eslint-fix', 'Perform eslint --fix on resulting file')
+  .option('--skip-prettier', 'Do not reformat the file with prettier (default is false)');
 
 // add pass through options
 decaffeinateOptions.concat(prettierOptions).forEach(([flag, description]) => {
