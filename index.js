@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const camelCase = require('lodash/camelCase');
 const chalk = require('chalk');
 const path = require('path');
 const program = require('commander');
@@ -13,72 +14,51 @@ const rceToJSXPath = path.resolve(__dirname, './node_modules/react-codemod/trans
 
 shell.config.fatal = true;
 
+// pass through options
+const decaffeinateOptions = [
+  ['--keep-commonjs', 'Do not convert require and module.exports to import and export'],
+  ['--prefer-const', 'Use "const" when possible in output code'],
+  ['--loose-default-params', 'Convert CS default params to JS default params.'],
+  ['--loose-for-expressions', 'Do not wrap expression loop targets in Array.from'],
+  ['--loose-for-of', 'Do not wrap JS for...of loop targets in Array.from'],
+  ['--loose-includes', 'Do not wrap in Array.from when converting in to includes'],
+  ['--allow-invalid-constructors', "Don't error when constructors use this before super or omit the super call in a subclass."],
+  ['--enable-babel-constructor-workaround', 'Use a hacky babel-specific workaround to allow this before super in constructors.'],
+];
+
+const prettierOptions = [
+  ['--print-width <int>', 'Specify the length of line that the formatter will wrap on. Defaults to 80.'],
+  ['--tab-width <int>', 'Specify the number of spaces per indentation-level. Defaults to 2.'],
+  ['--single-quote', 'Use single quotes instead of double.'],
+  ['--trailing-comma', 'Print trailing commas wherever possible.'],
+  ['--bracket-spacing', 'Put spaces between brackets. Defaults to true.'],
+  ['--parser <flow|babylon>', 'Specify which parse to use. Defaults to babylon.'],
+];
+
+// transform a parsed commander option back into a cli flag
+function passFlag(option) {
+  const [flag] = option.split(' ');
+  const key = camelCase(flag);
+  const value = program[key];
+
+  if (value === undefined) { return ''; }
+
+  return typeof value === 'boolean' ? flag : [flag, value].join(' ');
+}
+
 function decaffeinateCommand() {
   const command = [decafPath];
+  const options = decaffeinateOptions.map(([option]) => passFlag(option));
 
-  if (program.keepCommonjs) {
-    command.push('--keep-commonjs');
-  }
-
-  if (program.preferConst) {
-    command.push('--prefer-const');
-  }
-
-  if (program.looseDefaultParams) {
-    command.push('--loose-default-params');
-  }
-
-  if (program.looseForExpressions) {
-    command.push('--loose-for-expressions');
-  }
-
-  if (program.looseForOf) {
-    command.push('--loose-for-of');
-  }
-
-  if (program.looseIncludes) {
-    command.push('--loose-includes');
-  }
-
-  if (program.allowInvalidConstructors) {
-    command.push('--allow-invalid-constructors');
-  }
-
-  if (program.enableBabelConstructorWorkaround) {
-    command.push('--enable-babel-constructor-workaround');
-  }
-
-  return command.join(' ');
+  return command.concat(options).join(' ');
 }
 
 function prettierCommand(file) {
-  const command = [`${prettierPath} --write`]
+  const command = [`${prettierPath} --write`];
 
-  if (program.printWidth) {
-    command.push(`--print-width ${program.printWidth}`)
-  }
+  const options = prettierOptions.map(([option]) => passFlag(option));
 
-  if (program.tabWidth) {
-    command.push(`--tab-width ${program.tabWidth}`)
-  }
-
-  if (program.singleQuote) {
-    command.push(`--single-quote`)
-  }
-
-  if (program.trailingComma) {
-    command.push(`--trailing-comma`)
-  }
-
-  if (program.bracketSpacing) {
-    command.push(`--backet-spacing`)
-  }
-
-  if (program.parser) {
-    command.push(`--parser ${program.parser}`)
-  }
-
-  return command.concat(file).join(' ');
+  return command.concat(options).concat(file).join(' ');
 }
 
 function cjsxTransformCommand(file) {
@@ -130,22 +110,13 @@ function processFile(file) {
 program
   .arguments('<file>')
   .option('-o, --output [filepath]', 'Output file path')
-  .option('-e, --eslint-fix', 'Perform eslint --fix on resulting file')
-  // decaffeinate options
-  .option('--keep-commonjs', 'Do not convert require and module.exports to import and export')
-  .option('--prefer-const', 'Use "const" when possible in output code')
-  .option('--loose-default-params', 'Convert CS default params to JS default params.')
-  .option('--loose-for-expressions', 'Do not wrap expression loop targets in Array.from')
-  .option('--loose-for-of', 'Do not wrap JS for...of loop targets in Array.from')
-  .option('--loose-includes', 'Do not wrap in Array.from when converting in to includes')
-  .option('--allow-invalid-constructors', "Don't error when constructors use this before super or omit the super call in a subclass.")
-  .option('--enable-babel-constructor-workaround', 'Use a hacky babel-specific workaround to allow this before super in constructors.')
-  // prettier options
-  .option('--print-width <int>', 'Specify the length of line that the formatter will wrap on. Defaults to 80.')
-  .option('--tab-width <int>', 'Specify the number of spaces per indentation-level. Defaults to 2.')
-  .option('--single-quote', 'Use single quotes instead of double.')
-  .option('--trailing-comma', 'Print trailing commas wherever possible.')
-  .option('--bracket-spacing', 'Put spaces between brackets. Defaults to true.')
-  .option('--parser <flow|babylon>', 'Specify which parse to use. Defaults to babylon.')
+  .option('-e, --eslint-fix', 'Perform eslint --fix on resulting file');
+
+// add pass through options
+decaffeinateOptions.concat(prettierOptions).forEach(([flag, description]) => {
+  program.option(flag, description);
+});
+
+program
   .action(processFile)
   .parse(process.argv);
