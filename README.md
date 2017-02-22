@@ -8,6 +8,7 @@ javascript. It relies on several other tools to ease the conversion process and 
 * [prettier](https://github.com/jlongster/prettier) For final formatting and cleanup
 * [ESLint](http://eslint.org) Optional step to make resulting code match your own style conventions.
 
+Learn more from our blog on [converting our React codebase from CoffeeScript to ES6](https://blog.bugsnag.com/converting-a-large-react-codebase-from-coffeescript-to-es6/). 
 
 ## Instalation
 
