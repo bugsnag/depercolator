@@ -103,7 +103,11 @@ function processFile(file) {
       renderError('eslint must be present when specifying --eslint-fix');
       shell.exit(1);
     }
+
+    // turn off fatal mode
+    shell.config.fatal = false;
     shell.exec(`eslint --fix ${output}`);
+    shell.config.fatal = true;
   }
 
   renderSuccess(`Converted ${file}${chalk.bold.white(' → ')}${output}`);
