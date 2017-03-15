@@ -20,7 +20,7 @@ npm i -g depercolator
 or
 
 ```text
-yarn add global depercolator
+yarn global add depercolator
 ```
 
 ## Usage
