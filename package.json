@@ -22,7 +22,7 @@
     "decaffeinate": "^2.47.0",
     "jscodeshift": "^0.3.30",
     "lodash": "^4.17.4",
-    "prettier": "^0.16.0",
+    "prettier": "^1.1.0",
     "react-codemod": "reactjs/react-codemod#a21a48727",
     "resolve-bin": "^0.4.0",
     "shelljs": "^0.7.6"
