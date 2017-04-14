@@ -58,7 +58,9 @@ the underlying command
 
 * `--print-width <int>`: Specify the length of line that the formatter will wrap on. Defaults to 80.
 * `--tab-width <int>`: Specify the number of spaces per indentation-level. Defaults to 2.
++ `--use-tabs`: Indent lines with tabs instead of spaces. Defaults to false.
 * `--single-quote`: Use single quotes instead of double.
 * `--trailing-comma`: Print trailing commas wherever possible.
 * `--bracket-spacing`: Put spaces between brackets. Defaults to true.
++ `--jsx-bracket-same-line`: Put > on the last line. Defaults to false.
 * `--parser <flow|babylon>`: Specify which parse to use. Defaults to babylon.
