@@ -1,16 +1,17 @@
 #!/usr/bin/env node
+const fs = require('fs');
+const babel = require('babel-core');
 const camelCase = require('lodash/camelCase');
 const chalk = require('chalk');
-const path = require('path');
 const program = require('commander');
 const shell = require('shelljs');
 const resolveBin = require('resolve-bin');
 
 const decafPath = resolveBin.sync('decaffeinate');
 const prettierPath = resolveBin.sync('prettier');
-const jscodeshiftPath = resolveBin.sync('jscodeshift');
-const cjsxTransformPath = resolveBin.sync('coffee-react-transform', { executable: 'cjsx-transform' });
-const rceToJSXPath = path.resolve(__dirname, './node_modules/react-codemod/transforms/create-element-to-jsx.js');
+const cjsxTransformPath = resolveBin.sync('coffee-react-transform', {
+  executable: 'cjsx-transform',
+});
 
 shell.config.fatal = true;
 
@@ -22,12 +23,21 @@ const decaffeinateOptions = [
   ['--loose-for-expressions', 'Do not wrap expression loop targets in Array.from'],
   ['--loose-for-of', 'Do not wrap JS for...of loop targets in Array.from'],
   ['--loose-includes', 'Do not wrap in Array.from when converting in to includes'],
-  ['--allow-invalid-constructors', "Don't error when constructors use this before super or omit the super call in a subclass."],
-  ['--enable-babel-constructor-workaround', 'Use a hacky babel-specific workaround to allow this before super in constructors.'],
+  [
+    '--allow-invalid-constructors',
+    "Don't error when constructors use this before super or omit the super call in a subclass.",
+  ],
+  [
+    '--enable-babel-constructor-workaround',
+    'Use a hacky babel-specific workaround to allow this before super in constructors.',
+  ],
 ];
 
 const prettierOptions = [
-  ['--print-width <int>', 'Specify the length of line that the formatter will wrap on. Defaults to 80.'],
+  [
+    '--print-width <int>',
+    'Specify the length of line that the formatter will wrap on. Defaults to 80.',
+  ],
   ['--tab-width <int>', 'Specify the number of spaces per indentation-level. Defaults to 2.'],
   ['--use-tabs', 'Indent lines with tabs instead of spaces. Defaults to false.'],
   ['--single-quote', 'Use single quotes instead of double.'],
@@ -43,7 +53,9 @@ function passFlag(option) {
   const key = camelCase(flag);
   const value = program[key];
 
-  if (value === undefined) { return ''; }
+  if (value === undefined) {
+    return '';
+  }
 
   return typeof value === 'boolean' ? flag : [flag, value].join(' ');
 }
@@ -67,10 +79,6 @@ function cjsxTransformCommand(file) {
   return [cjsxTransformPath, file].join(' ');
 }
 
-function jsCodeShiftCommand(file) {
-  return [jscodeshiftPath, '-t', rceToJSXPath, file].join(' ');
-}
-
 function makeOutputPath(file) {
   return file.replace(/.cjsx$/, '.jsx').replace(/.coffee$/, '.js');
 }
@@ -86,33 +94,39 @@ function renderSuccess(message) {
 }
 
 function processFile(file) {
+  let result = '';
   const output = program.output || makeOutputPath(file);
-  shell
-    .exec(cjsxTransformCommand(file))
-    .exec(decaffeinateCommand())
-    .to(output);
+  result = shell
+    .exec(cjsxTransformCommand(file), { silent: true })
+    .exec(decaffeinateCommand(), { silent: true }).stdout;
 
   // convert React.createElement to jsx
-  shell.exec(jsCodeShiftCommand(output));
+  result = babel.transform(result, {
+    plugins: ['transform-react-createelement-to-jsx'],
+  }).code;
 
   // prettier
-  if (!program.skipPrettier) {
-    shell.exec(prettierCommand(output));
+  // if (!program.skipPrettier) {
+  //   shell.exec(prettierCommand(output));
+  // }
+  //
+  // if (program.eslintFix) {
+  //   if (!shell.which('eslint')) {
+  //     renderError('eslint must be present when specifying --eslint-fix');
+  //     shell.exit(1);
+  //   }
+  //
+  //   // turn off fatal mode
+  //   shell.config.fatal = false;
+  //   shell.exec(`eslint --fix ${output}`);
+  //   shell.config.fatal = true;
+  // }
+
+  function success() {
+    renderSuccess(`Converted ${file}${chalk.bold.white(' → ')}${output}`);
   }
 
-  if (program.eslintFix) {
-    if (!shell.which('eslint')) {
-      renderError('eslint must be present when specifying --eslint-fix');
-      shell.exit(1);
-    }
-
-    // turn off fatal mode
-    shell.config.fatal = false;
-    shell.exec(`eslint --fix ${output}`);
-    shell.config.fatal = true;
-  }
-
-  renderSuccess(`Converted ${file}${chalk.bold.white(' → ')}${output}`);
+  fs.writeFile(output, result, {}, success);
 }
 
 program
@@ -126,6 +140,4 @@ decaffeinateOptions.concat(prettierOptions).forEach(([flag, description]) => {
   program.option(flag, description);
 });
 
-program
-  .action(processFile)
-  .parse(process.argv);
+program.action(processFile).parse(process.argv);
