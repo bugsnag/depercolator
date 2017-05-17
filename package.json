@@ -2,11 +2,12 @@
   "name": "depercolator",
   "version": "0.3.0",
   "description": "Converts coffeescript to idiomatic javascript (supports JSX)",
-  "main": "index.js",
+  "main": "dist/index.js",
   "homepage": "https://github.com/bugsnag/depercolator",
   "scripts": {
     "test": "jest",
     "pretest": "yarn run build",
+    "prepublish": "yarn run build",
     "build": "babel index.js -d dist"
   },
   "engines": {
