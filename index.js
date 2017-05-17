@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-const fs = require('fs');
-const babel = require('babel-core');
-const camelCase = require('lodash/camelCase');
-const chalk = require('chalk');
-const program = require('commander');
-const shell = require('shelljs');
-const resolveBin = require('resolve-bin');
+import fs from 'fs';
+import { transform as babelTransform } from 'babel-core';
+import camelCase from 'lodash/camelCase';
+import chalk from 'chalk';
+import program from 'commander';
+import shell from 'shelljs';
+import resolveBin from 'resolve-bin';
+import prettier from 'prettier-eslint';
 
 const decafPath = resolveBin.sync('decaffeinate');
-const prettierPath = resolveBin.sync('prettier');
 const cjsxTransformPath = resolveBin.sync('coffee-react-transform', {
   executable: 'cjsx-transform',
 });
@@ -60,19 +60,21 @@ function passFlag(option) {
   return typeof value === 'boolean' ? flag : [flag, value].join(' ');
 }
 
+function getOptions(array) {
+  const options = {};
+  array.forEach(([flag]) => {
+    const key = camelCase(flag);
+    options[key] = program[key];
+  });
+
+  return options;
+}
+
 function decaffeinateCommand() {
   const command = [decafPath];
   const options = decaffeinateOptions.map(([option]) => passFlag(option));
 
   return command.concat(options).join(' ');
-}
-
-function prettierCommand(file) {
-  const command = [`${prettierPath} --write`];
-
-  const options = prettierOptions.map(([option]) => passFlag(option));
-
-  return command.concat(options).concat(file).join(' ');
 }
 
 function cjsxTransformCommand(file) {
@@ -96,43 +98,33 @@ function renderSuccess(message) {
 function processFile(file) {
   let result = '';
   const output = program.output || makeOutputPath(file);
-  result = shell
+  const { stdout, stderr } = shell
     .exec(cjsxTransformCommand(file), { silent: true })
-    .exec(decaffeinateCommand(), { silent: true }).stdout;
+    .exec(decaffeinateCommand(), { silent: true });
 
-  // convert React.createElement to jsx
-  result = babel.transform(result, {
-    plugins: ['transform-react-createelement-to-jsx'],
-  }).code;
-
-  // prettier
-  // if (!program.skipPrettier) {
-  //   shell.exec(prettierCommand(output));
-  // }
-  //
-  // if (program.eslintFix) {
-  //   if (!shell.which('eslint')) {
-  //     renderError('eslint must be present when specifying --eslint-fix');
-  //     shell.exit(1);
-  //   }
-  //
-  //   // turn off fatal mode
-  //   shell.config.fatal = false;
-  //   shell.exec(`eslint --fix ${output}`);
-  //   shell.config.fatal = true;
-  // }
-
-  function success() {
-    renderSuccess(`Converted ${file}${chalk.bold.white(' → ')}${output}`);
+  if (stderr) {
+    renderError(stderr);
   }
 
-  fs.writeFile(output, result, {}, success);
+  // convert React.createElement to jsx
+  result = babelTransform(stdout, { plugins: ['transform-react-createelement-to-jsx'] }).code;
+
+  // prettier
+  if (!program.skipPrettier) {
+    result = prettier({
+      text: result,
+      prettierOptions: getOptions(prettierOptions),
+    });
+  }
+
+  fs.writeFile(output, result, {}, () => {
+    renderSuccess(`Converted ${file}${chalk.bold.white(' → ')}${output}`);
+  });
 }
 
 program
   .arguments('<file>')
   .option('-o, --output [filepath]', 'Output file path')
-  .option('-e, --eslint-fix', 'Perform eslint --fix on resulting file')
   .option('--skip-prettier', 'Do not reformat the file with prettier (default is false)');
 
 // add pass through options
