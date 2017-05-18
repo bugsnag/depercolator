@@ -6,8 +6,7 @@ javascript. It relies on several other tools to ease the conversion process and 
 * [cjsx-transform](https://github.com/jsdf/coffee-react-transform) for adding jsx support to decaffeinate
 * [decaffeinate](https://github.com/decaffeinate/decaffeinate) converts coffeescript to idiomatic javascript
 * [react-codemod](https://github.com/reactjs/react-codemod) for converting `React.createElement` calls back to JSX
-* [prettier](https://github.com/jlongster/prettier) For final formatting and cleanup
-* [ESLint](http://eslint.org) Optional step to make resulting code match your own style conventions.
+* [prettier-eslint](https://github.com/prettier/prettier-eslint) For final formatting and cleanup
 
 Learn more from our blog on [converting our React codebase from CoffeeScript to ES6](https://blog.bugsnag.com/converting-a-large-react-codebase-from-coffeescript-to-es6/).
 
@@ -33,7 +32,6 @@ depercolate <file> [options]
 
 * `-o, --output [filepath]`: Change path of resulting file (defaults to same
   path as original with a different extension)
-* `-e, --eslint-fix`: Perform eslint --fix on resulting file (requires that eslint be present)
 * `--skip-prettier`: Do not reformat the file with prettier (default is false)
 
 ## Decaffeinate options
