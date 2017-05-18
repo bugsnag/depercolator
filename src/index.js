@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import path from 'path';
 import fs from 'fs';
 import { transform as babelTransform } from 'babel-core';
 import camelCase from 'lodash/camelCase';
@@ -107,7 +108,12 @@ function processFile(file) {
   }
 
   // convert React.createElement to jsx
-  result = babelTransform(stdout, { plugins: ['transform-react-createelement-to-jsx'] }).code;
+  result = babelTransform(stdout, {
+    babelrc: false,
+    plugins: [
+      path.resolve(`${__dirname}/../node_modules/babel-plugin-transform-react-createelement-to-jsx`),
+    ],
+  }).code;
 
   // prettier
   if (!program.skipPrettier) {
