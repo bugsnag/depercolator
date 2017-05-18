@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`decaffeinate options supports all of them 1`] = `
+Array [
+  " -h",
+  " --help",
+  " --keep-commonjs",
+  " --prefer-const",
+  " --loose-default-params",
+  " --loose-for-expressions",
+  " --loose-for-of",
+  " --loose-includes",
+  " --allow-invalid-constructors",
+  " --enable-babel-constructor-workaround",
+]
+`;
+
+exports[`happy test converts the file 1`] = `
+"import React from 'react';
+
+let testConstant = 'foo';
+
+export default React.createClass({
+  render() {
+    return <div className=\\"hello\\"><div>Hello</div></div>;
+  },
+});
+"
+`;
+
+exports[`prettier options supports all of them 1`] = `
+Array [
+  " --write",
+  " --list-different",
+  " -l",
+  " --stdin",
+  " --print-width",
+  " --tab-width",
+  " --use-tabs",
+  " --no-semi",
+  " --single-quote",
+  " --no-bracket-spacing",
+  " --jsx-bracket-same-line",
+  " --trailing-comma",
+  " --parser",
+  " --no-color",
+  " --version",
+  " -v",
+]
+`;
