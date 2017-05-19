@@ -120,6 +120,7 @@ function processFile(file) {
     result = prettier({
       text: result,
       prettierOptions: getOptions(prettierOptions),
+      filePath: output,
     });
   }
 
