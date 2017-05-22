@@ -6,6 +6,7 @@ const program = require('commander');
 const shell = require('shelljs');
 const resolveBin = require('resolve-bin');
 
+const nodePath = process.execPath;
 const decafPath = resolveBin.sync('decaffeinate');
 const prettierPath = resolveBin.sync('prettier');
 const jscodeshiftPath = resolveBin.sync('jscodeshift');
@@ -49,26 +50,45 @@ function passFlag(option) {
 }
 
 function decaffeinateCommand() {
-  const command = [decafPath];
+  const command = [nodePath, decafPath];
   const options = decaffeinateOptions.map(([option]) => passFlag(option));
 
   return command.concat(options).join(' ');
 }
 
 function prettierCommand(file) {
-  const command = [`${prettierPath} --write`];
+  const command = [nodePath, prettierPath, '--write'];
 
   const options = prettierOptions.map(([option]) => passFlag(option));
 
-  return command.concat(options).concat(file).join(' ');
+  return stringifyCommand(command.concat(options).concat(file));
 }
 
 function cjsxTransformCommand(file) {
-  return [cjsxTransformPath, file].join(' ');
+  const command = [nodePath, cjsxTransformPath, file];
+
+  return stringifyCommand(command);
 }
 
 function jsCodeShiftCommand(file) {
-  return [jscodeshiftPath, '-t', rceToJSXPath, file].join(' ');
+  const command = [nodePath, jscodeshiftPath, '-t', rceToJSXPath, file];
+
+  return stringifyCommand(command);
+}
+
+function stringifyCommand(parts) {
+  if (process.platform === 'win32') {
+    // On Windows, it's common for programs to be installed into "C:\Program Files (x86)\..." which
+    // causes issues when trying to run commands - as the space is interpreted as an argument delimiter.
+    parts = parts.map(part => {
+      // Only quote strings containing a space, and haven't already been quoted
+      if (part.indexOf(' ') !== -1 && !/^\".*\"$/.test(part)) {
+        return `"${str}"`;
+      }
+      return part;
+    });
+  }
+  return parts.join(' ');
 }
 
 function makeOutputPath(file) {
