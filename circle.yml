@@ -1,0 +1,10 @@
+machine:
+  node:
+    version: v6.1.0
+
+dependencies:
+  override:
+    - yarn
+test:
+  override:
+    - yarn test -- --ci
