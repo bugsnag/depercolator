@@ -1,4 +1,4 @@
-# Depercolator
+# Depercolator [![CircleCI](https://circleci.com/gh/bugsnag/depercolator.svg?style=svg)](https://circleci.com/gh/bugsnag/depercolator)
 
 This tool is a swiss army knife for converting coffeescript files to
 javascript. It relies on several other tools to ease the conversion process and create idiomatic javascript and JSX.
