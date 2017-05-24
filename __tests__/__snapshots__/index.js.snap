@@ -16,20 +16,14 @@ Array [
 `;
 
 exports[`happy test converts the file 1`] = `
-"import React from \\"react\\";
+"import React from 'react';
 
-let testConstant = \\"foo\\";
+let testConstant = 'foo';
 
 export default React.createClass({
   render() {
-    return (
-      <div className=\\"hello\\">
-        <div>
-          Hello
-        </div>
-      </div>
-    );
-  }
+    return <div className=\\"hello\\"><div>Hello</div></div>;
+  },
 });
 "
 `;

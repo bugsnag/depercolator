@@ -3,7 +3,7 @@ import resolveBin from 'resolve-bin';
 import { execAsync } from 'async-child-process';
 import path from 'path';
 
-const COMMAND = path.resolve('./index.js');
+const COMMAND = path.resolve('./dist/index.js');
 
 function mapExtension(source) {
   const ext = path.extname(source);
