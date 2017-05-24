@@ -17,10 +17,12 @@
     "url": "git://github.com/bugsnag/depercolator.git"
   },
   "license": "MIT",
-  "main": "./dist/index.js",
   "bin": {
-    "depercolate": "./dist/index.js"
+    "depercolate": "dist/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "babel-core": "^6.24.1",
     "babel-plugin-transform-react-createelement-to-jsx": "^1.0.1",
