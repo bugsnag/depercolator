@@ -1,20 +1,12 @@
 #!/usr/bin/env node
-import path from 'path';
 import fs from 'fs';
+import coffeeReactTransform from 'coffee-react-transform';
+import { convert as decaf } from 'decaffeinate';
 import { transform as babelTransform } from 'babel-core';
 import camelCase from 'lodash/camelCase';
 import chalk from 'chalk';
 import program from 'commander';
-import shell from 'shelljs';
-import resolveBin from 'resolve-bin';
 import prettier from 'prettier-eslint';
-
-const decafPath = resolveBin.sync('decaffeinate');
-const cjsxTransformPath = resolveBin.sync('coffee-react-transform', {
-  executable: 'cjsx-transform',
-});
-
-shell.config.fatal = true;
 
 // pass through options
 const decaffeinateOptions = [
@@ -48,19 +40,6 @@ const prettierOptions = [
   ['--parser <flow|babylon>', 'Specify which parse to use. Defaults to babylon.'],
 ];
 
-// transform a parsed commander option back into a cli flag
-function passFlag(option) {
-  const [flag] = option.split(' ');
-  const key = camelCase(flag);
-  const value = program[key];
-
-  if (value === undefined) {
-    return '';
-  }
-
-  return typeof value === 'boolean' ? flag : [flag, value].join(' ');
-}
-
 function getOptions(array) {
   const options = {};
   array.forEach(([flag]) => {
@@ -69,17 +48,6 @@ function getOptions(array) {
   });
 
   return options;
-}
-
-function decaffeinateCommand() {
-  const command = [decafPath];
-  const options = decaffeinateOptions.map(([option]) => passFlag(option));
-
-  return command.concat(options).join(' ');
-}
-
-function cjsxTransformCommand(file) {
-  return [cjsxTransformPath, file].join(' ');
 }
 
 function makeOutputPath(file) {
@@ -97,36 +65,39 @@ function renderSuccess(message) {
 }
 
 function processFile(file) {
-  let result = '';
   const output = program.output || makeOutputPath(file);
-  const { stdout, stderr } = shell
-    .exec(cjsxTransformCommand(file), { silent: true })
-    .exec(decaffeinateCommand(), { silent: true });
+  let result = '';
 
-  if (stderr) {
-    renderError(stderr);
-  }
+  // transform cjsx to plain coffeescript
+  try {
+    result = coffeeReactTransform(fs.readFileSync(file, 'utf8'));
 
-  // convert React.createElement to jsx
-  result = babelTransform(stdout, {
-    babelrc: false,
-    plugins: [
-      path.resolve(`${__dirname}/../node_modules/babel-plugin-transform-react-createelement-to-jsx`),
-    ],
-  }).code;
+    // transform coffeescript to javascript
+    result = decaf(result, getOptions(decaffeinateOptions)).code;
 
-  // prettier
-  if (!program.skipPrettier) {
-    result = prettier({
-      text: result,
-      prettierOptions: getOptions(prettierOptions),
-      filePath: output,
+    // convert React.createElement to jsx
+    result = babelTransform(result, {
+      babelrc: false,
+      plugins: ['transform-react-createelement-to-jsx'],
+    }).code;
+
+    // format using prettier and eslint
+    if (!program.skipPrettier) {
+      result = prettier({
+        text: result,
+        prettierOptions: getOptions(prettierOptions),
+        filePath: output,
+      });
+    }
+
+    // write output file
+    fs.writeFile(output, result, {}, () => {
+      renderSuccess(`Converted ${file}${chalk.bold.white(' → ')}${output}`);
     });
+  } catch (e) {
+    renderError(e);
+    process.exit(1);
   }
-
-  fs.writeFile(output, result, {}, () => {
-    renderSuccess(`Converted ${file}${chalk.bold.white(' → ')}${output}`);
-  });
 }
 
 program
