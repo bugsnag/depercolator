@@ -11,13 +11,9 @@ function mapExtension(source) {
 }
 
 async function run(filename, flags = '') {
-  const source = path.resolve(`./fixtures/${filename}`);
+  const source = path.resolve(filename);
   const outputPath = mapExtension(source);
-  const { stderr } = await execAsync(`${COMMAND} ${flags} ${source}`);
-
-  if (stderr) {
-    throw stderr;
-  }
+  await execAsync(`${COMMAND} ${flags} ${source}`);
 
   const result = await fs.readFile(outputPath, 'utf8');
   fs.unlink(outputPath);
@@ -26,8 +22,15 @@ async function run(filename, flags = '') {
 
 describe('happy test', () => {
   it('converts the file', async () => {
-    const result = await run('testfile.cjsx');
+    const result = await run('./fixtures/testfile.cjsx');
     expect(result).toMatchSnapshot();
+  });
+});
+
+describe('invalid option', () => {
+  it('throws the error', async () => {
+    expect.assertions(1);
+    await expect(run('./fixtures/badfile.cjsx')).rejects.toBeDefined();
   });
 });
 
