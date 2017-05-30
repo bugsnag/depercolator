@@ -1,6 +1,6 @@
 {
   "name": "depercolator",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Converts coffeescript to idiomatic javascript (supports JSX)",
   "homepage": "https://github.com/bugsnag/depercolator",
   "scripts": {
