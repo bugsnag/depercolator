@@ -54,9 +54,9 @@ function makeOutputPath(file) {
   return file.replace(/.cjsx$/, '.jsx').replace(/.coffee$/, '.js');
 }
 
-function renderError(message) {
+function renderError({ message, label = 'ERROR:' }) {
   console.log('\n');
-  console.log(`${chalk.bgRed('ERROR:')} ${chalk.red(message)}`);
+  console.log(`${chalk.bgRed(`${label}:`)} ${chalk.red(message)}`);
 }
 
 function renderSuccess(message) {
@@ -71,33 +71,48 @@ function processFile(file) {
   // transform cjsx to plain coffeescript
   try {
     result = coffeeReactTransform(fs.readFileSync(file, 'utf8'));
+  } catch (e) {
+    renderError({ label: 'CJSX Transform Error', message: e });
+    process.exit(1);
+  }
 
-    // transform coffeescript to javascript
+  // transform coffeescript to javascript
+  try {
     result = decaf(result, getOptions(decaffeinateOptions)).code;
+  } catch (e) {
+    renderError({ label: 'Decaffeinate Error', message: e });
+    process.exit(1);
+  }
 
-    // convert React.createElement to jsx
+  // convert React.createElement to jsx
+  try {
     result = babelTransform(result, {
       babelrc: false,
       plugins: ['transform-react-createelement-to-jsx'],
     }).code;
+  } catch (e) {
+    renderError({ label: 'Babel error', message: e });
+    process.exit(1);
+  }
 
-    // format using prettier and eslint
-    if (!program.skipPrettier) {
+  // format using prettier and eslint
+  if (!program.skipPrettier) {
+    try {
       result = prettier({
         text: result,
         prettierOptions: getOptions(prettierOptions),
         filePath: output,
       });
+    } catch (e) {
+      renderError({ label: 'Prettier error', message: e });
+      process.exit(1);
     }
-
-    // write output file
-    fs.writeFile(output, result, {}, () => {
-      renderSuccess(`Converted ${file}${chalk.bold.white(' → ')}${output}`);
-    });
-  } catch (e) {
-    renderError(e);
-    process.exit(1);
   }
+
+  // write output file
+  fs.writeFile(output, result, {}, () => {
+    renderSuccess(`Converted ${file}${chalk.bold.white(' → ')}${output}`);
+  });
 }
 
 program
