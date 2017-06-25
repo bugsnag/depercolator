@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import fs from 'fs';
 import coffeeReactTransform from 'coffee-react-transform';
-import path from 'path';
 import { convert as decaf } from 'decaffeinate';
 import { transform as babelTransform } from 'babel-core';
 import camelCase from 'lodash/camelCase';
@@ -90,7 +89,7 @@ function processFile(file) {
     result = babelTransform(result, {
       babelrc: false,
       plugins: [
-        path.join(__dirname, '../node_modules', 'babel-plugin-transform-react-createelement-to-jsx'),
+        require.resolve('babel-plugin-transform-react-createelement-to-jsx'),
       ],
     }).code;
   } catch (e) {
