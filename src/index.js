@@ -45,8 +45,8 @@ function getOptions(array) {
   array.forEach(([flag]) => {
     const key = camelCase(flag.replace(' <int>', ''));
     let value = program[key];
-    if(typeof value === 'string') {
-      value = parseInt(value)
+    if (/<int>/.test(flag) && typeof value === 'string') {
+      value = parseInt(value, 10);
     }
     options[key] = value;
   });
