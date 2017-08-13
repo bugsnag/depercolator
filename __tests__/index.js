@@ -51,3 +51,10 @@ describe('prettier options', () => {
     expect(flags).toMatchSnapshot();
   });
 });
+
+describe('flags with <int>', () => {
+  it('cleans the int', async () => {
+    const result = await run('./fixtures/testfile.cjsx', '--tab-width 4');
+    expect(result).toMatchSnapshot();
+  });
+});

@@ -43,8 +43,12 @@ const prettierOptions = [
 function getOptions(array) {
   const options = {};
   array.forEach(([flag]) => {
-    const key = camelCase(flag);
-    options[key] = program[key];
+    const key = camelCase(flag.replace(' <int>', ''));
+    let value = program[key];
+    if (/<int>/.test(flag) && typeof value === 'string') {
+      value = parseInt(value, 10);
+    }
+    options[key] = value;
   });
 
   return options;
