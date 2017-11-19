@@ -4,38 +4,66 @@ exports[`decaffeinate options supports all of them 1`] = `
 Array [
   " -h",
   " --help",
-  " --keep-commonjs",
-  " --prefer-const",
+  " --modernize-js",
+  " --literate",
+  " --disable-suggestion-comment",
+  " --no-array-includes",
+  " --use-optional-chaining",
+  " --use-js-modules",
+  " --loose-js-modules",
+  " --safe-import-function-identifiers",
+  " --prefer-let",
+  " --loose",
+  " --loose",
   " --loose-default-params",
   " --loose-for-expressions",
   " --loose-for-of",
   " --loose-includes",
-  " --allow-invalid-constructors",
-  " --enable-babel-constructor-workaround",
+  " --loose-comparison-negation",
+  " --disable-babel-constructor-workaround",
+  " --disallow-invalid-constructors",
 ]
 `;
 
 exports[`flags with <int> cleans the int 1`] = `
-"import React from 'react';
+"/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const React = require('react');
 
-let testConstant = 'foo';
+const testConstant = 'foo';
 
-export default React.createClass({
+module.exports = React.createClass({
     render() {
-        return <div className=\\"hello\\"><div>Hello</div></div>;
+        return (
+            <div className=\\"hello\\">
+                <div>Hello</div>
+            </div>
+        );
     },
 });
 "
 `;
 
 exports[`happy test converts the file 1`] = `
-"import React from 'react';
+"/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+const React = require('react');
 
-let testConstant = 'foo';
+const testConstant = 'foo';
 
-export default React.createClass({
+module.exports = React.createClass({
   render() {
-    return <div className=\\"hello\\"><div>Hello</div></div>;
+    return (
+      <div className=\\"hello\\">
+        <div>Hello</div>
+      </div>
+    );
   },
 });
 "
@@ -43,21 +71,44 @@ export default React.createClass({
 
 exports[`prettier options supports all of them 1`] = `
 Array [
-  " --write",
-  " --list-different",
   " -l",
-  " --stdin",
-  " --print-width",
-  " --tab-width",
-  " --use-tabs",
-  " --no-semi",
-  " --single-quote",
+  " --list-different",
+  " --write",
   " --no-bracket-spacing",
   " --jsx-bracket-same-line",
-  " --trailing-comma",
   " --parser",
+  " --print-width",
+  " --no-prose-wrap",
+  " --no-semi",
+  " --single-quote",
+  " --tab-width",
+  " --trailing-comma",
+  " --use-tabs",
+  " --config",
+  " --no-config",
+  " --config-precedence",
+  " --find-config-path",
+  " --ignore-path",
+  " --with-node-modules",
+  " --cursor-offset",
+  " --range-start",
+  " --range-end",
+  " -1",
+  " --range-end",
+  " --cursor-offset",
+  " --range-start",
+  " --cursor-offset",
   " --no-color",
-  " --version",
+  " -h",
+  " --help",
+  " --help",
+  " --insert-pragma",
+  " --loglevel",
+  " --require-pragma",
+  " --stdin",
+  " --stdin-filepath",
+  " --support-info",
   " -v",
+  " --version",
 ]
 `;
