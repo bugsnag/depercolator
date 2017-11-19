@@ -29,9 +29,9 @@
     "chalk": "^2.3.0",
     "coffee-react-transform": "^5.0.0",
     "commander": "^2.9.0",
-    "decaffeinate": "^2.47.0",
+    "decaffeinate": "^3.3.13",
     "lodash": "^4.17.4",
-    "prettier-eslint": "^6.2.2"
+    "prettier-eslint": "^8.2.2"
   },
   "devDependencies": {
     "async-child-process": "^1.1.1",
