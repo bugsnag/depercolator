@@ -26,7 +26,7 @@
   "dependencies": {
     "babel-core": "^6.24.1",
     "babel-plugin-transform-react-createelement-to-jsx": "^1.0.1",
-    "chalk": "^1.1.3",
+    "chalk": "^2.3.0",
     "coffee-react-transform": "^5.0.0",
     "commander": "^2.9.0",
     "decaffeinate": "^2.47.0",
@@ -37,12 +37,12 @@
     "async-child-process": "^1.1.1",
     "async-file": "^2.0.2",
     "babel-cli": "^6.24.1",
-    "babel-jest": "^20.0.3",
+    "babel-jest": "^21.2.0",
     "babel-preset-env": "^1.4.0",
-    "eslint": "^3.15.0",
-    "eslint-config-airbnb-base": "^11.1.0",
+    "eslint": "^4.11.0",
+    "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.2.0",
-    "jest": "^20.0.1",
+    "jest": "^21.2.1",
     "resolve-bin": "^0.4.0"
   }
 }
