@@ -58,3 +58,17 @@ describe('flags with <int>', () => {
     expect(result).toMatchSnapshot();
   });
 });
+
+describe('flag --use-js-modules', () => {
+  it('does not camelcase js', async () => {
+    const result = await run('./fixtures/testfile.cjsx', '--use-js-modules');
+    expect(result).toMatchSnapshot();
+  });
+});
+
+describe('flag --loose-js-modules', () => {
+  it('does not camelcase js', async () => {
+    const result = await run('./fixtures/named_export.cjsx', '--loose-js-modules --use-js-modules');
+    expect(result).toMatchSnapshot();
+  });
+});

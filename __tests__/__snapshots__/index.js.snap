@@ -25,6 +25,52 @@ Array [
 ]
 `;
 
+exports[`flag --loose-js-modules does not camelcase js 1`] = `
+"/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import React from 'react';
+
+const testConstant = 'foo';
+
+const klass = React.createClass({
+  render() {
+    return (
+      <div className=\\"hello\\">
+        <div>Hello</div>
+      </div>
+    );
+  },
+});
+
+export { klass as named };
+"
+`;
+
+exports[`flag --use-js-modules does not camelcase js 1`] = `
+"/*
+ * decaffeinate suggestions:
+ * DS102: Remove unnecessary code created because of implicit returns
+ * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
+ */
+import React from 'react';
+
+const testConstant = 'foo';
+
+export default React.createClass({
+  render() {
+    return (
+      <div className=\\"hello\\">
+        <div>Hello</div>
+      </div>
+    );
+  },
+});
+"
+`;
+
 exports[`flags with <int> cleans the int 1`] = `
 "/*
  * decaffeinate suggestions:
