@@ -62,10 +62,17 @@ function getOptions(array) {
   array.forEach(([flag]) => {
     const key = camelCase(flag.replace(' <int>', ''));
     let value = program[key];
+
     if (/<int>/.test(flag) && typeof value === 'string') {
       value = parseInt(value, 10);
     }
-    options[key] = value;
+    // decaffinate does not camelCase Js in --use-js-modules or --loose-js-modules
+    if (key === 'useJsModules')
+      options['useJSModules'] = value;
+    else if (key === 'looseJsModules')
+      options['looseJSModules'] = value;
+    else
+      options[key] = value
   });
 
   return options;
